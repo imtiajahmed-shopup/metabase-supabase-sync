@@ -2,8 +2,8 @@ name: Sync Metabase to Supabase
 
 on:
   schedule:
-    - cron: '0 0 * * *' # Runs daily at midnight UTC
-  workflow_dispatch: # Enables manual trigger button
+    - cron: '0 0 * * *'
+  workflow_dispatch:
 
 jobs:
   sync:
