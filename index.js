@@ -34,13 +34,14 @@ function buildParameters(cardId, fromDate, toDate) {
 async function fetchMetabaseRows(sessionToken, cardId, fromDate, toDate) {
   const parameters = buildParameters(cardId, fromDate, toDate);
 
-  const url = `${METABASE_URL}/api/card/${cardId}/query/json?parameters=${encodeURIComponent(
-    JSON.stringify(parameters)
-  )}`;
+  const url = `${METABASE_URL}/api/card/${cardId}/query/json`;
+  const body = new URLSearchParams();
+  body.set('parameters', JSON.stringify(parameters));
 
   const res = await fetch(url, {
     method: 'POST',
     headers: { 'X-Metabase-Session': sessionToken },
+    body,
   });
 
   if (res.status === 401 || res.status === 403) {
@@ -50,8 +51,8 @@ async function fetchMetabaseRows(sessionToken, cardId, fromDate, toDate) {
     );
   }
   if (!res.ok) {
-    const body = await res.text();
-    throw new Error(`Metabase API error for card ${cardId} (${res.status}): ${body.slice(0, 500)}`);
+    const errBody = await res.text();
+    throw new Error(`Metabase API error for card ${cardId} (${res.status}): ${errBody.slice(0, 500)}`);
   }
 
   const rows = await res.json();
