@@ -7,6 +7,17 @@ const METABASE_SESSION_TOKEN = process.env.METABASE_SESSION_TOKEN;
 const SUPABASE_URL = process.env.SUPABASE_URL;
 const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
+// Check missing secrets before initializing
+if (!SUPABASE_URL) {
+  throw new Error("Missing secret: SUPABASE_URL is not configured in GitHub Repository Secrets.");
+}
+if (!SUPABASE_SERVICE_ROLE_KEY) {
+  throw new Error("Missing secret: SUPABASE_SERVICE_ROLE_KEY is not configured in GitHub Repository Secrets.");
+}
+if (!METABASE_SESSION_TOKEN) {
+  throw new Error("Missing secret: METABASE_SESSION_TOKEN is not configured in GitHub Repository Secrets.");
+}
+
 const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
 
 async function syncMetabaseToSupabase() {
@@ -43,7 +54,7 @@ async function syncMetabaseToSupabase() {
   }
 
   const { data, error } = await supabase
-    .from('your_target_table') // Replace with your target Supabase table name
+    .from('your_target_table') // Make sure this matches your real Supabase table name!
     .upsert(formattedRecords);
 
   if (error) throw error;
