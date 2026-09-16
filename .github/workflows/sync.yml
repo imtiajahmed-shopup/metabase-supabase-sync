@@ -4,6 +4,11 @@ on:
   schedule:
     - cron: '0 0 * * *'
   workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Fetch from Metabase but skip the Supabase write'
+        type: boolean
+        default: false
 
 jobs:
   sync:
@@ -25,4 +30,5 @@ jobs:
           METABASE_SESSION_TOKEN: ${{ secrets.METABASE_SESSION_TOKEN }}
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          DRY_RUN: ${{ github.event.inputs.dry_run || 'false' }}
         run: node index.js
