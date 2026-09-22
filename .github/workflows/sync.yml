@@ -27,8 +27,9 @@ jobs:
 
       - name: Execute Sync
         env:
-          METABASE_SESSION_TOKEN: ${{ secrets.METABASE_SESSION_TOKEN }}
-          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
-          DRY_RUN: ${{ github.event.inputs.dry_run || 'false' }}
+        METABASE_URL: ${{ secrets.METABASE_URL }}
+        METABASE_SESSION_TOKEN: ${{ secrets.METABASE_SESSION_TOKEN }}
+        METABASE_CARD_ID: ${{ secrets.METABASE_CARD_ID }}
+        SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+        FULL_REFRESH: "true"
         run: node index.js
