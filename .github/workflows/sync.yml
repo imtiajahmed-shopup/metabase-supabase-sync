@@ -1,31 +1,3 @@
-
-
-- name: Check Required Secrets
-  env:
-    METABASE_SESSION_TOKEN: ${{ secrets.METABASE_SESSION_TOKEN }}
-    SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-    SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
-  run: |
-    if [ -n "$METABASE_SESSION_TOKEN" ]; then
-      echo "METABASE_SESSION_TOKEN: OK"
-    else
-      echo "METABASE_SESSION_TOKEN: MISSING"
-    fi
-
-    if [ -n "$SUPABASE_URL" ]; then
-      echo "SUPABASE_URL: OK"
-    else
-      echo "SUPABASE_URL: MISSING"
-    fi
-
-    if [ -n "$SUPABASE_SERVICE_ROLE_KEY" ]; then
-      echo "SUPABASE_SERVICE_ROLE_KEY: OK"
-    else
-      echo "SUPABASE_SERVICE_ROLE_KEY: MISSING"
-    fi
-
-
-
 name: Sync Metabase to Supabase
 
 on:
@@ -55,6 +27,30 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Check Required Secrets
+        env:
+          METABASE_SESSION_TOKEN: ${{ secrets.METABASE_SESSION_TOKEN }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        run: |
+          if [ -n "$METABASE_SESSION_TOKEN" ]; then
+            echo "METABASE_SESSION_TOKEN: OK"
+          else
+            echo "METABASE_SESSION_TOKEN: MISSING"
+          fi
+
+          if [ -n "$SUPABASE_URL" ]; then
+            echo "SUPABASE_URL: OK"
+          else
+            echo "SUPABASE_URL: MISSING"
+          fi
+
+          if [ -n "$SUPABASE_SERVICE_ROLE_KEY" ]; then
+            echo "SUPABASE_SERVICE_ROLE_KEY: OK"
+          else
+            echo "SUPABASE_SERVICE_ROLE_KEY: MISSING"
+          fi
+
       - name: Test Metabase Connectivity
         run: |
           echo "Testing Metabase connectivity..."
@@ -62,10 +58,8 @@ jobs:
 
       - name: Execute Sync
         env:
-          METABASE_URL: ${{ secrets.METABASE_URL }}
           METABASE_SESSION_TOKEN: ${{ secrets.METABASE_SESSION_TOKEN }}
-          METABASE_CARD_ID: ${{ secrets.METABASE_CARD_ID }}
-          SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
-          FULL_REFRESH: "true"
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
           DRY_RUN: ${{ inputs.dry_run || false }}
         run: node index.js
