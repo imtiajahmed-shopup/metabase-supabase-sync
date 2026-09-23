@@ -3,6 +3,7 @@ name: Sync Metabase to Supabase
 on:
   schedule:
     - cron: '0 0 * * *'
+
   workflow_dispatch:
     inputs:
       dry_run:
@@ -13,6 +14,7 @@ on:
 jobs:
   sync:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
@@ -24,6 +26,11 @@ jobs:
 
       - name: Install dependencies
         run: npm install
+
+      - name: Test Metabase Connectivity
+        run: |
+          echo "Testing Metabase connectivity..."
+          curl -I --connect-timeout 10 https://plmb.shopup.center
 
       - name: Execute Sync
         env:
